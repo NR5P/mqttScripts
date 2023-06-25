@@ -42,7 +42,7 @@ print("Connected to MQTT broker")
 
 # Function to handle the event
 def handle_event():
-    message = "Event occurred!"
+    message = "ALERT"
     mqtt_client.publish(MQTT_TOPIC, message)
     print("Published message:", message)
 
