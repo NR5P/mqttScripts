@@ -4,8 +4,8 @@ from machine import Pin
 from umqtt.simple import MQTTClient
 
 # WiFi settings
-WIFI_SSID = "your_wifi_ssid"
-WIFI_PASSWORD = "your_wifi_password"
+WIFI_SSID = "bugsquashed"
+WIFI_PASSWORD = "cooltomato001"
 
 # MQTT settings
 MQTT_BROKER = "10.74.92.143"
