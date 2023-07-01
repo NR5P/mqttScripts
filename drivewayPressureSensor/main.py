@@ -30,21 +30,31 @@ event_pin = Pin(15, Pin.IN)
 # Connect to WiFi
 wifi = network.WLAN(network.STA_IF)
 wifi.active(True)
-wifi.connect(WIFI_SSID, WIFI_PASSWORD)
-while not wifi.isconnected():
-    pass
-print("Connected to WiFi")
 
 # Connect to MQTT broker
 mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, MQTT_PORT)
-mqtt_client.connect()
-print("Connected to MQTT broker")
+
+def connect_to_mqtt():
+    mqtt_client.connect()
+    print("Connected to MQTT broker")
 
 # Function to handle the event
 def handle_event():
     message = "ALERT"
     mqtt_client.publish(MQTT_TOPIC, message)
     print("Published message:", message)
+
+def connect_to_wifi():
+    wifi.connect(WIFI_SSID, WIFI_PASSWORD)
+    while not wifi.isconnected():
+        pass
+    print("Connected to Wi-Fi")
+
+def handle_reconnection():
+    while not wifi.isconnected():
+        connect_to_wifi()
+        time.sleep(1)
+    connect_to_mqtt()
 
 def checkWeightTrigger():
     weight = driver.read()/1000
@@ -59,7 +69,14 @@ def checkWeightTrigger():
 
 # Main loop
 while True:
-    # Your main program logic here
-    time.sleep_ms(250)
-    if checkWeightTrigger():
-        handle_event()
+    if wifi.isconnected():
+        try:
+            if checkWeightTrigger():
+                handle_event()
+        except OSError:
+            print("MQTT connection lost. Reconnecting...")
+            handle_reconnection()
+    else:
+        print("Wi-Fi connection lost. Reconnecting...")
+        handle_reconnection()
+
