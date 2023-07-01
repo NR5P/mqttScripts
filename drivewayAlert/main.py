@@ -126,10 +126,6 @@ buzzer_pin = Pin(12, Pin.OUT)
 # Connect to Wi-Fi
 wifi = network.WLAN(network.STA_IF)
 wifi.active(True)
-wifi.connect(WIFI_SSID, WIFI_PASSWORD)
-while not wifi.isconnected():
-    pass
-print("Connected to WiFi")
 
 # MQTT message callback
 def mqtt_callback(topic, msg):
