@@ -166,15 +166,40 @@ def play_chime():
     time.sleep(chime_duration)
     pwm.deinit()
 
+def connect_to_wifi():
+    wifi.connect(WIFI_SSID, WIFI_PASSWORD)
+    while not wifi.isconnected():
+        pass
+    print("Connected to Wi-Fi")
+
 # Connect to MQTT broker and subscribe to the topic
 mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, MQTT_PORT)
-mqtt_client.set_callback(mqtt_callback)
-mqtt_client.connect()
-mqtt_client.subscribe(MQTT_TOPIC)
-print("Connected to MQTT broker and subscribed to topic:", MQTT_TOPIC)
+
+def connect_to_mqtt():
+    mqtt_client.set_callback(mqtt_callback)
+    mqtt_client.connect()
+    mqtt_client.subscribe(MQTT_TOPIC)
+    print("Connected to MQTT broker and subscribed to topic:", MQTT_TOPIC)
+
+# Function to handle reconnection
+def handle_reconnection():
+    while not wifi.isconnected():
+        connect_to_wifi()
+        time.sleep(1)
+    connect_to_mqtt()
+
 
 # Main loop
 while True:
-    #perform_action()
-    mqtt_client.check_msg()  # Check for new MQTT messages
-    time.sleep(1)
+    if wifi.isconnected():
+        try:
+            mqtt_client.check_msg()  # Check for new MQTT messages
+            # Your main program logic here
+            time.sleep(1)
+        except OSError:
+            print("MQTT connection lost. Reconnecting...")
+            handle_reconnection()
+    else:
+        print("Wi-Fi connection lost. Reconnecting...")
+        handle_reconnection()
+
