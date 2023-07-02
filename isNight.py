@@ -43,7 +43,7 @@ while True:
         client.publish(topic, str(is_in_range))
 
         # Wait for 1 second before publishing again
-        time.sleep(5)
+        time.sleep(60)
     except KeyboardInterrupt:
         break
 
