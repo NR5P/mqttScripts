@@ -1,0 +1,2 @@
+@reboot sleep 30 && python3 /home/mqtt/mqttScripts/isNight.py >> /home/mqtt/mqttScripts/con.log 2>&1
+@reboot sleep 30 && python3 /home/mqtt/mqttScripts/triggerBlueIrisDriveway.py >> /home/mqtt/mqttScripts/con.log 2>&1
