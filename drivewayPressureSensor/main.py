@@ -54,7 +54,10 @@ def handle_reconnection():
     while not wifi.isconnected():
         connect_to_wifi()
         time.sleep(1)
-    connect_to_mqtt()
+    while not mqtt_client.is_connected():
+        print("MQTT connection lost. Reconnecting...")
+        connect_to_mqtt()
+        time.sleep(1)
 
 def checkWeightTrigger():
     weight = driver.read()/1000
@@ -79,4 +82,3 @@ while True:
     else:
         print("Wi-Fi connection lost. Reconnecting...")
         handle_reconnection()
-
