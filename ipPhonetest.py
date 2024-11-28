@@ -72,6 +72,6 @@ def make_call_sip(extension):
 # Example usage
 #make_call("192.168.1.22")
 
-make_call_sip("12345")
+#make_call_sip("12345")
 
 

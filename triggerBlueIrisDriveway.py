@@ -1,9 +1,9 @@
 import paho.mqtt.client as mqtt
-from ipPhone import make_call
+from ipPhonetest import make_call_sip
 
 # MQTT broker configuration
-BROKER_ADDRESS = "192.168.1.246"
-TOPIC_SUBSCRIBE = "/gate/carAlertPressureSensor"
+BROKER_ADDRESS = "192.168.10.9"
+TOPIC_SUBSCRIBE = "gate/gatesensor/triggered"
 TOPIC_PUBLISH = "BlueIris/admin"
 
 # Define the MQTT message handler
@@ -12,8 +12,7 @@ def on_message(client, userdata, message):
     if message.payload.decode() == "ALERT":
         # Publish a message to the BlueIris/admin topic
         client.publish(TOPIC_PUBLISH, "camera=gateCamera&trigger")
-        make_call("192.168.1.22") #make a call to home ip phone
-        make_call("192.168.1.21") #make a call to office ip phone
+        make_call_sip("12345") #make a call to office ip phone
 
 # Connect to the MQTT broker
 client = mqtt.Client()
